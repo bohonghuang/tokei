@@ -5,7 +5,7 @@ on:
     branches:
       - master
   pull_request:
-
+  workflow_dispatch:
 jobs:
   # This job downloads and stores `cross` as an artifact, so that it can be
   # redownloaded across all of the jobs. Currently this copied pasted between
