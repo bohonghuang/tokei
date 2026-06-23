@@ -112,6 +112,7 @@ jobs:
           matrix.target != 'armv5te-unknown-linux-musleabi' &&
           matrix.target != 'sparc64-unknown-linux-gnu'
 
+
     strategy:
       fail-fast: true
       matrix:
@@ -166,3 +167,20 @@ jobs:
           # - thumbv7em-none-eabi
           # - thumbv7em-none-eabihf
           # - thumbv7m-none-eabi
+
+  linux-musl:
+    runs-on: ubuntu-latest
+    needs: install-cross
+    steps:
+      - uses: actions/checkout@v3
+      - run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - run: rustup target add x86_64-unknown-linux-musl
+      - run: ci/set_rust_version.bash ${{ matrix.channel }} x86_64-unknown-linux-musl
+      - run: cargo build --target x86_64-unknown-linux-musl
+      - run: cargo build --target x86_64-unknown-linux-musl --all-features
+      - run: cargo test --target x86_64-unknown-linux-musl
+
+    strategy:
+      fail-fast: true
+      matrix:
+        channel: [stable, beta, nightly]
